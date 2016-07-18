@@ -93,6 +93,28 @@ namespace ToDoApplication.Controllers
             ViewBag.ListID = new SelectList(db.Lists, "ListID", "ListTitle", item.ListID);
             return View(item);
         }
+        public ActionResult MarkDone(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Item item = db.Items.Find(id);
+            if (item == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                db.Entry(item).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            ViewBag.ListID = new SelectList(db.Lists, "ListID", "ListTitle", item.ListID);
+            return View(item);
+
+        }
 
         // GET: Items/Delete/5
         public ActionResult Delete(int? id)
